@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roblox Heat Energy Quest - สื่อการเรียนรู้โต้ตอบ พลังงานความร้อน (ม.1)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Fredoka & Prompt for Roblox Vibe -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Prompt', 'Fredoka', sans-serif;
+            background: #0f172a;
+            color: #f8fafc;
+            user-select: none;
+        }
+        .roblox-font {
+            font-family: 'Fredoka', 'Prompt', sans-serif;
+        }
+        
+        /* Roblox Glassmorphism & Neon Glow */
+        .roblox-card {
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(12px);
+            border: 3px solid #334155;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), inset 0 2px 0 0 rgba(255, 255, 255, 0.1);
+        }
+        
+        .roblox-btn-green {
+            background: linear-gradient(180deg, #22c55e 0%, #15803d 100%);
+            border-bottom: 5px solid #166534;
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+            transition: all 0.1s ease;
+        }
+        .roblox-btn-green:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+        .roblox-btn-green:active {
+            transform: translateY(3px);
+            border-bottom-width: 2px;
+        }
+
+        .roblox-btn-blue {
+            background: linear-gradient(180deg, #06b6d4 0%, #0891b2 100%);
+            border-bottom: 5px solid #155e75;
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.4);
+            transition: all 0.1s ease;
+        }
+        .roblox-btn-blue:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+        .roblox-btn-blue:active {
+            transform: translateY(3px);
+            border-bottom-width: 2px;
+        }
+
+        .roblox-btn-amber {
+            background: linear-gradient(180deg, #f59e0b 0%, #b45309 100%);
+            border-bottom: 5px solid #78350f;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+            transition: all 0.1s ease;
+        }
+
+        .roblox-btn-red {
+            background: linear-gradient(180deg, #ef4444 0%, #b91c1c 100%);
+            border-bottom: 5px solid #7f1d1d;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+            transition: all 0.1s ease;
+        }
+
+        .roblox-tab.active {
+            background: #2563eb;
+            border-bottom: 4px solid #1d4ed8;
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(37, 99, 235, 0.6);
+        }
+
+        .avatar-card {
+            border: 3px solid transparent;
+            transition: all 0.2s ease;
+        }
+        .avatar-card.selected {
+            border-color: #06b6d4;
+            background: rgba(6, 182, 212, 0.2);
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.6);
+            transform: scale(1.05);
+        }
+
+        /* Custom Slider Styling */
+        input[type=range] {
+            accent-color: #06b6d4;
+        }
+
+        /* Roblox Stud Pattern Background */
+        .stud-pattern {
+            background-color: #0f172a;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.08) 2px, transparent 2.5px);
+            background-size: 24px 24px;
+        }
+    </style>
+</head>
+<body class="stud-pattern min-h-screen flex flex-col justify-between">
+
+    <!-- =========================================================
+         1. WELCOME SCREEN / AVATAR SELECTION (Roblox Lobby)
+    ========================================================= -->
+    <div id="welcome-screen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md">
+        <div class="roblox-card rounded-3xl max-w-2xl w-full p-6 md:p-8 border-4 border-cyan-500/50 shadow-2xl relative overflow-hidden">
+            <!-- Roblox Decorative Header -->
+            <div class="text-center space-y-2 mb-6">
+                <div class="inline-flex items-center gap-2 bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 px-4 py-1.5 rounded-full text-xs roblox-font tracking-wider uppercase font-bold">
+                    <i class="fa-solid fa-cube text-cyan-400"></i> Roblox Edition - Grade 7 Science
+                </div>
+                <h1 class="text-3xl md:text-5xl font-extrabold roblox-font text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-red-500 tracking-wide drop-shadow-md">
+                    HEAT ENERGY QUEST
+                </h1>
+                <p class="text-slate-300 text-sm">การผจญภัยในดินแดนพลังงานความร้อน | สื่อวิทยาศาสตร์ ม.1</p>
+            </div>
+
+            <!-- Student Name Input -->
+            <div class="space-y-2 mb-6">
+                <label class="block text-xs font-bold roblox-font text-cyan-300 uppercase tracking-wider">
+                    <i class="fa-solid fa-user-pen mr-1"></i> 1. พิมพ์ชื่อผู้เล่นของคุณ (Player Name):
+                </label>
+                <input type="text" id="player-name-input" placeholder="ใส่ชื่อนักเรียนตรงนี้..." 
+                       class="w-full bg-slate-900/90 border-2 border-slate-700 rounded-2xl px-4 py-3 text-yellow-300 font-bold placeholder-slate-500 focus:outline-none focus:border-cyan-400 text-lg shadow-inner">
+            </div>
+
+            <!-- Avatar Selector -->
+            <div class="space-y-2 mb-8">
+                <label class="block text-xs font-bold roblox-font text-cyan-300 uppercase tracking-wider">
+                    <i class="fa-solid fa-masks-theater mr-1"></i> 2. เลือกตัวละคร Roblox (Choose Avatar):
+                </label>
+                <div class="grid grid-cols-3 sm:grid-cols-6 gap-3" id="avatar-grid">
+                    <!-- Avatars injected dynamically via JS -->
+                </div>
+            </div>
+
+            <!-- Start Button -->
+            <button onclick="enterGame()" class="w-full roblox-btn-green py-4 rounded-2xl text-white font-extrabold text-xl roblox-font tracking-wider uppercase flex items-center justify-center gap-3">
+                <i class="fa-solid fa-play text-2xl"></i> เข้าสู่เกม (START GAME)
+            </button>
+        </div>
+    </div>
+
+    <!-- =========================================================
+         2. IN-GAME HEADER / HUD (Heads-Up Display)
+    ========================================================= -->
+    <header class="bg-slate-900/90 border-b-4 border-cyan-600/40 sticky top-0 z-40 backdrop-blur-md shadow-lg">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-3">
+            
+            <!-- Player Status Badge -->
+            <div class="flex items-center gap-3 bg-slate-800/80 border-2 border-slate-700 p-2 rounded-2xl shadow-inner">
+                <div id="hud-avatar-icon" class="w-10 h-10 rounded-xl bg-cyan-500/20 border-2 border-cyan-400 flex items-center justify-center text-2xl shadow">
+                    🧑‍🔬
+                </div>
+                <div>
+                    <div id="hud-player-name" class="font-bold text-yellow-400 text-sm md:text-base leading-tight">นักเรียน ม.1</div>
+                    <div class="text-[11px] text-slate-400 font-medium">ระดับ: <span class="text-cyan-400 font-bold">Explorer</span></div>
+                </div>
+            </div>
+
+            <!-- Robux / Coins & Trophy Counter -->
+            <div class="flex items-center gap-3">
+                <div class="bg-amber-500/20 border border-amber-500/50 px-3 py-1.5 rounded-xl flex items-center gap-2 text-amber-300 text-sm font-bold roblox-font">
+                    <i class="fa-solid fa-coins text-amber-400 text-lg"></i>
+                    <span id="robux-coins">0</span> Coins
+                </div>
+                <div class="bg-emerald-500/20 border border-emerald-500/50 px-3 py-1.5 rounded-xl flex items-center gap-2 text-emerald-300 text-sm font-bold roblox-font">
+                    <i class="fa-solid fa-trophy text-yellow-400 text-lg"></i>
+                    <span id="trophy-count">0</span>/3
+                </div>
+            </div>
+
+            <!-- Navigation Quest Tabs -->
+            <nav class="w-full md:w-auto flex bg-slate-950/60 p-1.5 rounded-2xl border border-slate-800 gap-1">
+                <button onclick="switchTab('conduction')" id="tab-conduction" class="roblox-tab active flex-1 md:flex-none text-xs md:text-sm px-4 py-2 rounded-xl font-bold roblox-font transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-fire text-amber-400"></i> Quest 1: การนำความร้อน
+                </button>
+                <button onclick="switchTab('expansion')" id="tab-expansion" class="roblox-tab flex-1 md:flex-none text-xs md:text-sm px-4 py-2 rounded-xl font-bold text-slate-300 hover:text-white roblox-font transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-up-right-and-down-left-from-center text-cyan-400"></i> Quest 2: การขยายตัว
+                </button>
+                <button onclick="switchTab('quiz')" id="tab-quiz" class="roblox-tab flex-1 md:flex-none text-xs md:text-sm px-4 py-2 rounded-xl font-bold text-slate-300 hover:text-white roblox-font transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-gamepad text-purple-400"></i> Quest 3: Quiz มินิเกม
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- =========================================================
+         MAIN CONTENT & QUEST LABS
+    ========================================================= -->
+    <main class="max-w-6xl mx-auto px-4 py-6 flex-grow w-full">
+
+        <!-- QUEST 1: HEAT CONDUCTION LAB -->
+        <section id="section-conduction" class="space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Simulation Canvas Block -->
+                <div class="lg:col-span-2 roblox-card rounded-3xl p-5 flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="font-bold text-lg text-yellow-300 roblox-font flex items-center gap-2">
+                                <i class="fa-solid fa-flask text-red-500"></i> Roblox Heat Conduction Lab
+                            </h3>
+                            <span id="heat-status-badge" class="bg-slate-800 text-cyan-400 border border-cyan-500/30 text-xs px-3 py-1 rounded-full font-bold">
+                                สถานะ: รอดำเนินการ
+                            </span>
+                        </div>
+                        
+                        <!-- Interactive Canvas -->
+                        <div class="canvas-container bg-slate-950 rounded-2xl overflow-hidden h-64 md:h-72 relative border-2 border-slate-700 flex items-center justify-center">
+                            <canvas id="conductionCanvas" class="w-full h-full"></canvas>
+                            
+                            <!-- Overlay HUD stats -->
+                            <div class="absolute top-3 right-3 bg-slate-900/90 border border-slate-700 text-white text-xs px-3 py-1.5 rounded-xl flex items-center gap-2 font-mono">
+                                <i class="fa-solid fa-stopwatch text-amber-400"></i>
+                                เวลาที่ใช้: <span id="timer-display" class="text-yellow-300 font-bold">0.0</span>s
+                            </div>
+                            <div class="absolute bottom-3 left-3 bg-slate-900/90 border border-slate-700 text-white text-xs px-3 py-1.5 rounded-xl">
+                                อุณหภูมิปลายสาย: <span id="temp-end-display" class="text-orange-400 font-bold">25 °C</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Controls -->
+                    <div class="mt-5 space-y-4 bg-slate-900/60 p-4 rounded-2xl border border-slate-800">
+                        <!-- Material Selection Buttons -->
+                        <div>
+                            <label class="block text-xs font-bold text-cyan-300 uppercase tracking-wider mb-2">1. เลือกวัสดุตัวกลาง (Material Blocks):</label>
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                                <button onclick="setMaterial('copper')" id="mat-copper" class="mat-btn active bg-slate-800 border-2 border-amber-500 text-amber-400 font-bold py-2 px-3 rounded-xl text-xs hover:bg-slate-700 transition flex items-center justify-center gap-2">
+                                    <span class="w-3 h-3 rounded-full bg-amber-600 inline-block"></span> ทองแดง (นำดี)
+                                </button>
+                                <button onclick="setMaterial('iron')" id="mat-iron" class="mat-btn bg-slate-800 border border-slate-700 text-slate-300 font-bold py-2 px-3 rounded-xl text-xs hover:bg-slate-700 transition flex items-center justify-center gap-2">
+                                    <span class="w-3 h-3 rounded-full bg-slate-400 inline-block"></span> เหล็ก (ปานกลาง)
+                                </button>
+                                <button onclick="setMaterial('glass')" id="mat-glass" class="mat-btn bg-slate-800 border border-slate-700 text-slate-300 font-bold py-2 px-3 rounded-xl text-xs hover:bg-slate-700 transition flex items-center justify-center gap-2">
+                                    <span class="w-3 h-3 rounded-full bg-cyan-300 inline-block"></span> แก้ว (ฉนวน)
+                                </button>
+                                <button onclick="setMaterial('wood')" id="mat-wood" class="mat-btn bg-slate-800 border border-slate-700 text-slate-300 font-bold py-2 px-3 rounded-xl text-xs hover:bg-slate-700 transition flex items-center justify-center gap-2">
+                                    <span class="w-3 h-3 rounded-full bg-amber-800 inline-block"></span> ไม้ (ฉนวน)
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Heat Slider Controls -->
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <label for="heatSlider" class="text-xs font-bold text-cyan-300 uppercase tracking-wider">2. ปรับระดับความร้อนเตาเผา (Flame Temp):</label>
+                                <span id="heat-val-display" class="text-sm font-bold text-red-400">300 °C</span>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <i class="fa-solid fa-snowflake text-cyan-400"></i>
+                                <input type="range" id="heatSlider" min="25" max="500" value="300" class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer" oninput="updateHeatSource(this.value)">
+                                <i class="fa-solid fa-fire text-red-500 text-lg"></i>
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="flex gap-2 pt-1">
+                            <button onclick="startConductionTest()" class="flex-1 roblox-btn-red text-white font-bold py-2.5 px-4 rounded-xl text-sm roblox-font tracking-wide uppercase flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-play"></i> จุดไฟทดลอง (BURN IT!)
+                            </button>
+                            <button onclick="resetConductionTest()" class="bg-slate-800 border border-slate-700 hover:bg-slate-700 text-slate-300 font-bold py-2.5 px-4 rounded-xl text-sm transition flex items-center justify-center gap-1">
+                                <i class="fa-solid fa-rotate-right"></i> รีเซ็ต
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Theory / Quest Objectives -->
+                <div class="roblox-card rounded-3xl p-5 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-bold text-lg text-cyan-300 roblox-font mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-book-bookmark text-amber-400"></i> ความรู้เควสต์: การนำความร้อน
+                        </h3>
+                        <div class="space-y-3 text-sm text-slate-300">
+                            <p class="leading-relaxed">
+                                <b class="text-yellow-300">การนำความร้อน (Heat Conduction)</b> คือการถ่ายโอนพลังงานความร้อนผ่านตัวกลางที่เป็น <mark class="bg-cyan-500/20 text-cyan-300 px-1 rounded border border-cyan-500/40">ของแข็ง</mark> โดยอนุภาคของตัวกลางไม่ได้เคลื่อนที่ไปด้วย
+                            </p>
+                            <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-700 space-y-1.5 text-xs">
+                                <div class="font-bold text-amber-400 uppercase tracking-wide">💡 สังเกตกลไกอนุภาค Roblox:</div>
+                                <p class="text-slate-300 leading-relaxed">
+                                    เมื่ออนุภาคตรงจุดไฟได้รับพลังงาน จะ <b class="text-red-400">สั่นสะเทือนรุนแรงขึ้น</b> แล้วชนกระแทกอนุภาคข้างเคียงเพื่อส่งต่อพลังงาน!
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 bg-amber-500/10 border border-amber-500/30 rounded-2xl p-3 text-xs text-amber-300">
+                        <i class="fa-solid fa-lightbulb text-amber-400 mr-1"></i> <b>เป้าหมายเควสต์:</b> สังเกตการสั่นและการเปลี่ยนสีอนุภาคจากฟ้า ➔ ส้ม ➔ แดง เพื่อเปรียบเทียบความสามารถในการนำความร้อนของวัสดุ!
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- QUEST 2: THERMAL EXPANSION LAB -->
+        <section id="section-expansion" class="space-y-6 hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Simulation Canvas Block -->
+                <div class="lg:col-span-2 roblox-card rounded-3xl p-5 flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="font-bold text-lg text-yellow-300 roblox-font flex items-center gap-2">
+                                <i class="fa-solid fa-up-right-and-down-left-from-center text-cyan-400"></i> Roblox Thermal Expansion Lab
+                            </h3>
+                            <span id="exp-state-display" class="bg-slate-800 text-cyan-300 border border-cyan-500/30 text-xs px-3 py-1 rounded-full font-bold">
+                                อุณหภูมิห้อง (25 °C)
+                            </span>
+                        </div>
+                        
+                        <!-- Canvas Block -->
+                        <div class="canvas-container bg-slate-950 rounded-2xl overflow-hidden h-64 md:h-72 relative border-2 border-slate-700 flex items-center justify-center">
+                            <canvas id="expansionCanvas" class="w-full h-full"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Controls -->
+                    <div class="mt-5 space-y-4 bg-slate-900/60 p-4 rounded-2xl border border-slate-800">
+                        <!-- Mode Selector -->
+                        <div>
+                            <label class="block text-xs font-bold text-cyan-300 uppercase tracking-wider mb-2">1. เลือกประเภทการทดลอง (Lab Mode):</label>
+                            <div class="grid grid-cols-3 gap-2">
+                                <button onclick="setExpMode('ball')" id="exp-mode-ball" class="exp-btn active bg-slate-800 border-2 border-cyan-500 text-cyan-400 font-bold py-2 px-2 rounded-xl text-xs hover:bg-slate-700 transition flex items-center justify-center gap-1">
+                                    ⚽ ลูกกลมกับห่วง
+                                </button>
+                                <button onclick="setExpMode('wire')" id="exp-mode-wire" class="exp-btn bg-slate-800 border border-slate-700 text-slate-300 font-bold py-2 px-2 rounded-xl text-xs hover:bg-slate-700 transition flex items-center justify-center gap-1">
+                                    〰️ เส้นลวดโลหะ
+                                </button>
+                                <button onclick="setExpMode('liquid')" id="exp-mode-liquid" class="exp-btn bg-slate-800 border border-slate-700 text-slate-300 font-bold py-2 px-2 rounded-xl text-xs hover:bg-slate-700 transition flex items-center justify-center gap-1">
+                                    🧪 ของเหลวในหลอด
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Temperature Control -->
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <label for="expTempSlider" class="text-xs font-bold text-cyan-300 uppercase tracking-wider">2. ปรับอุณหภูมิสาร (Temp Adjust):</label>
+                                <span id="exp-temp-val" class="text-sm font-bold text-amber-400">25 °C</span>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <i class="fa-solid fa-icicles text-cyan-400"></i>
+                                <input type="range" id="expTempSlider" min="-10" max="120" value="25" class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer" oninput="updateExpTemp(this.value)">
+                                <i class="fa-solid fa-temperature-full text-red-500"></i>
+                            </div>
+                        </div>
+
+                        <!-- Result Callout -->
+                        <div id="exp-result-text" class="bg-slate-950 p-3 rounded-xl text-xs border border-slate-800 text-slate-300 font-bold text-center">
+                            ลูกกลมขนาดปกติ สามารถลอดผ่านห่วงได้อย่างสะดวก
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Theory Box -->
+                <div class="roblox-card rounded-3xl p-5 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-bold text-lg text-cyan-300 roblox-font mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-atom text-purple-400"></i> หลักการการขยายตัว
+                        </h3>
+                        <div class="space-y-3 text-sm text-slate-300">
+                            <p class="leading-relaxed">
+                                เมื่อสารได้รับความร้อน อนุภาคจะสั่นสะเทือนเร็วขึ้นและ <b class="text-yellow-300">ผลักกันให้อยู่ห่างกันมากขึ้น</b> ส่งผลให้ขนาดและปริมาตรขยายใหญ่ขึ้น!
+                            </p>
+                            <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800 space-y-2 text-xs">
+                                <div><b class="text-red-400">🔥 เมื่อร้อนขึ้น:</b> อนุภาคห่างกันมากขึ้น ➔ วัตถุขยายตัว</div>
+                                <div><b class="text-cyan-400">❄️ เมื่อเย็นลง:</b> อนุภาคชิดกันมากขึ้น ➔ วัตถุหดตัว</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 bg-cyan-500/10 border border-cyan-500/30 rounded-2xl p-3 text-xs text-cyan-300">
+                        <i class="fa-solid fa-wrench mr-1"></i> <b>การนำไปใช้:</b> การเว้นช่องว่างรอยต่อรางรถไฟ, สายไฟฟ้าหย่อนในฤดูร้อน, และการสร้างเทอร์มอมิเตอร์
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- QUEST 3: QUIZ MINI-GAME -->
+        <section id="section-quiz" class="space-y-6 hidden">
+            <div class="max-w-3xl mx-auto roblox-card rounded-3xl p-6 md:p-8 border-4 border-purple-500/40">
+                <div class="border-b border-slate-800 pb-4 mb-6 flex justify-between items-center">
+                    <div>
+                        <h3 class="text-xl font-extrabold text-yellow-300 roblox-font flex items-center gap-2">
+                            <i class="fa-solid fa-trophy text-amber-400"></i> Roblox Science Quiz Quest (3 ข้อ)
+                        </h3>
+                        <p class="text-xs text-slate-400">ทำแบบทดสอบเพื่อพิชิต Coins และ Bloxy Trophy!</p>
+                    </div>
+                    <div id="quiz-score-badge" class="hidden bg-emerald-500/20 border border-emerald-500/50 text-emerald-300 font-bold text-sm px-4 py-1.5 rounded-full roblox-font">
+                        คะแนน: <span id="score-val">0</span>/3
+                    </div>
+                </div>
+
+                <form id="quizForm" onsubmit="submitQuiz(event)">
+                    <!-- Question 1 -->
+                    <div class="mb-6 p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
+                        <p class="font-bold text-slate-200 text-sm mb-3">
+                            ข้อที่ 1: เหตุใดเมื่อเราเทน้ำร้อนลงในแก้วหนา แก้วจึงแตกร้าวได้ง่ายกว่าแก้วบาง?
+                        </p>
+                        <div class="space-y-2 text-sm text-slate-300">
+                            <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-800/60 border border-slate-700 hover:bg-cyan-500/10 hover:border-cyan-500/40 cursor-pointer transition">
+                                <input type="radio" name="q1" value="A" class="w-4 h-4 text-cyan-500" required>
+                                <span>ก. ผิวแก้วด้านในขยายตัวรวดเร็วกว่าผิวแก้วด้านนอก เกิดแรงดันขัดกันจนแตกร้าว</span>
+                            </label>
+                            <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-800/60 border border-slate-700 hover:bg-cyan-500/10 hover:border-cyan-500/40 cursor-pointer transition">
+                                <input type="radio" name="q1" value="B" class="w-4 h-4 text-cyan-500">
+                                <span>ข. แก้วหนานำความร้อนได้รวดเร็วเกินไปจนแก้วละลาย</span>
+                            </label>
+                            <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-800/60 border border-slate-700 hover:bg-cyan-500/10 hover:border-cyan-500/40 cursor-pointer transition">
+                                <input type="radio" name="q1" value="C" class="w-4 h-4 text-cyan-500">
+                                <span>ค. อนุภาคของแก้วหนาหลุดออกเป็นอิสระทันทีเมื่อถูกความร้อน</span>
+                            </label>
+                        </div>
+                        <div id="feedback-q1" class="mt-3 hidden text-xs p-3 rounded-xl"></div>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="mb-6 p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
+                        <p class="font-bold text-slate-200 text-sm mb-3">
+                            ข้อที่ 2: ข้อใดอธิบายกลไกการถ่ายโอนความร้อนใน "การนำความร้อน" ได้ถูกต้องที่สุด?
+                        </p>
+                        <div class="space-y-2 text-sm text-slate-300">
+                            <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-800/60 border border-slate-700 hover:bg-cyan-500/10 hover:border-cyan-500/40 cursor-pointer transition">
+                                <input type="radio" name="q2" value="A" class="w-4 h-4 text-cyan-500" required>
+                                <span>ก. อนุภาคเคลื่อนที่พาลอยจากฝั่งร้อนไปยังฝั่งเย็น</span>
+                            </label>
+                            <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-800/60 border border-slate-700 hover:bg-cyan-500/10 hover:border-cyan-500/40 cursor-pointer transition">
+                                <input type="radio" name="q2" value="B" class="w-4 h-4 text-cyan-500">
+                                <span>ข. อนุภาคสั่นสะเทือนชนกันเพื่อส่งต่อพลังงาน โดยตัวอนุภาคไม่ได้เคลื่อนที่ตามไป</span>
+                            </label>
+                            <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-800/60 border border-slate-700 hover:bg-cyan-500/10 hover:border-cyan-500/40 cursor-pointer transition">
+                                <input type="radio" name="q2" value="C" class="w-4 h-4 text-cyan-500">
+                                <span>ค. เกิดขึ้นเฉพาะกับตัวกลางที่เป็นแก๊สเท่านั้น</span>
+                            </label>
+                        </div>
+                        <div id="feedback-q2" class="mt-3 hidden text-xs p-3 rounded-xl"></div>
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div class="mb-6 p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
+                        <p class="font-bold text-slate-200 text-sm mb-3">
+                            ข้อที่ 3: ในการสร้างรางรถไฟ เหตุใดวิศวกรจึงต้องเว้นช่องว่างเล็กๆ ระหว่างรอยต่อของรางเหล็ก?
+                        </p>
+                        <div class="space-y-2 text-sm text-slate-300">
+                            <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-800/60 border border-slate-700 hover:bg-cyan-500/10 hover:border-cyan-500/40 cursor-pointer transition">
+                                <input type="radio" name="q3" value="A" class="w-4 h-4 text-cyan-500" required>
+                                <span>ก. ช่วยลดน้ำหนักของรางรถไฟ</span>
+                            </label>
+                            <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-800/60 border border-slate-700 hover:bg-cyan-500/10 hover:border-cyan-500/40 cursor-pointer transition">
+                                <input type="radio" name="q3" value="B" class="w-4 h-4 text-cyan-500">
+                                <span>ข. เพื่อรองรับการขยายตัวของรางเหล็กในวันอากาศร้อน ป้องกันไม่ให้รางดันกันจนโก่งงอ</span>
+                            </label>
+                            <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-800/60 border border-slate-700 hover:bg-cyan-500/10 hover:border-cyan-500/40 cursor-pointer transition">
+                                <input type="radio" name="q3" value="C" class="w-4 h-4 text-cyan-500">
+                                <span>ค. เพื่อให้ล้อรถไฟระบายลมยางได้สะดวก</span>
+                            </label>
+                        </div>
+                        <div id="feedback-q3" class="mt-3 hidden text-xs p-3 rounded-xl"></div>
+                    </div>
+
+                    <!-- Quiz Actions -->
+                    <div class="flex gap-3 pt-2">
+                        <button type="submit" id="btn-submit-quiz" class="flex-1 roblox-btn-green text-white font-extrabold py-3.5 px-6 rounded-2xl text-base roblox-font tracking-wide uppercase flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-paper-plane"></i> ส่งคำตอบและรับรางวัล (SUBMIT)
+                        </button>
+                        <button type="button" onclick="resetQuiz()" class="bg-slate-800 border border-slate-700 hover:bg-slate-700 text-slate-300 font-bold py-3.5 px-5 rounded-2xl text-sm transition flex items-center justify-center gap-1">
+                            <i class="fa-solid fa-rotate-right"></i> ทำใหม่
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 border-t border-slate-800 text-slate-500 text-xs py-4 text-center">
+        <div class="max-w-6xl mx-auto px-4 roblox-font">
+            🎮 ROBLOX HEAT ENERGY QUEST | สื่อการเรียนรู้วิทยาศาสตร์สำหรับนักเรียนชั้น ม.1
+        </div>
+    </footer>
+
+    <!-- JavaScript Game Logic & Simulations -->
+    <script>
+        // Roblox Avatar Database
+        const avatars = [
+            { id: 'scientist', icon: '🧑‍🔬', name: 'Scientist' },
+            { id: 'builder', icon: '👷', name: 'Builder' },
+            { id: 'noob', icon: '🟡', name: 'Noob' },
+            { id: 'bacon', icon: '🥓', name: 'Bacon Hair' },
+            { id: 'ninja', icon: '🥷', name: 'Ninja' },
+            { id: 'explorer', icon: '🤠', name: 'Explorer' }
+        ];
+
+        let selectedAvatar = avatars[0];
+        let playerName = "นักเรียน ม.1";
+        let coins = 0;
+        let trophies = 0;
+
+        // Render Avatars in Welcome Screen
+        function initAvatarSelector() {
+            const grid = document.getElementById('avatar-grid');
+            grid.innerHTML = avatars.map((av, index) => `
+                <div onclick="selectAvatar(${index})" id="avatar-card-${index}" 
+                     class="avatar-card ${index === 0 ? 'selected' : ''} bg-slate-900 border-2 border-slate-800 rounded-2xl p-3 text-center cursor-pointer hover:border-cyan-500/50">
+                    <div class="text-3xl mb-1">${av.icon}</div>
+                    <div class="text-[11px] font-bold text-slate-300">${av.name}</div>
+                </div>
+            `).join('');
+        }
+
+        function selectAvatar(index) {
+            selectedAvatar = avatars[index];
+            document.querySelectorAll('.avatar-card').forEach((card, i) => {
+                if (i === index) card.classList.add('selected');
+                else card.classList.remove('selected');
+            });
+        }
+
+        function enterGame() {
+            const nameInput = document.getElementById('player-name-input').value.trim();
+            if (nameInput) playerName = nameInput;
+
+            document.getElementById('hud-player-name').innerText = playerName;
+            document.getElementById('hud-avatar-icon').innerText = selectedAvatar.icon;
+
+            // Fade out welcome screen
+            const welcome = document.getElementById('welcome-screen');
+            welcome.style.opacity = '0';
+            welcome.style.transition = 'opacity 0.3s ease';
+            setTimeout(() => {
+                welcome.style.display = 'none';
+                initConductionCanvas();
+                initExpansionCanvas();
+                drawConductionFrame();
+                drawExpansionFrame();
+            }, 300);
+        }
+
+        // Tab Switcher
+        function switchTab(tabName) {
+            document.querySelectorAll('section[id^="section-"]').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.roblox-tab').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(`section-${tabName}`).classList.remove('hidden');
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+
+            if (tabName === 'conduction') {
+                initConductionCanvas();
+            } else if (tabName === 'expansion') {
+                initExpansionCanvas();
+            }
+        }
+
+        /* -------------------------------------------------------------
+           1. HEAT CONDUCTION SIMULATION (Canvas Engine)
+        ------------------------------------------------------------- */
+        const condCanvas = document.getElementById('conductionCanvas');
+        const condCtx = condCanvas.getContext('2d');
+        
+        let currentMaterial = 'copper';
+        let heatSourceTemp = 300;
+        let isHeating = false;
+        let startTime = 0;
+        let elapsedTime = 0;
+
+        const materials = {
+            copper: { name: 'ทองแดง', factor: 0.9 },
+            iron: { name: 'เหล็ก', factor: 0.45 },
+            glass: { name: 'แก้ว', factor: 0.12 },
+            wood: { name: 'ไม้', factor: 0.04 }
+        };
+
+        let particles = [];
+        const numCols = 16;
+        const numRows = 4;
+
+        function initConductionCanvas() {
+            const rect = condCanvas.parentElement.getBoundingClientRect();
+            condCanvas.width = rect.width;
+            condCanvas.height = rect.height;
+
+            particles = [];
+            const startX = condCanvas.width * 0.2;
+            const endX = condCanvas.width * 0.85;
+            const rodWidth = endX - startX;
+            const rodHeight = condCanvas.height * 0.35;
+            const startY = (condCanvas.height - rodHeight) / 2;
+
+            const spacingX = rodWidth / (numCols - 1);
+            const spacingY = rodHeight / (numRows - 1);
+
+            for (let r = 0; r < numRows; r++) {
+                for (let c = 0; c < numCols; c++) {
+                    particles.push({
+                        baseX: startX + c * spacingX,
+                        baseY: startY + r * spacingY,
+                        col: c,
+                        temp: 25,
+                        vibeX: 0,
+                        vibeY: 0
+                    });
+                }
+            }
+        }
+
+        function setMaterial(matKey) {
+            currentMaterial = matKey;
+            document.querySelectorAll('.mat-btn').forEach(btn => {
+                btn.classList.remove('active', 'border-2', 'border-amber-500', 'text-amber-400');
+                btn.classList.add('border-slate-700', 'text-slate-300');
+            });
+            const activeBtn = document.getElementById(`mat-${matKey}`);
+            activeBtn.classList.add('active', 'border-2', 'border-amber-500', 'text-amber-400');
+            resetConductionTest();
+        }
+
+        function updateHeatSource(val) {
+            heatSourceTemp = parseInt(val);
+            document.getElementById('heat-val-display').innerText = `${val} °C`;
+        }
+
+        function startConductionTest() {
+            if (!isHeating) {
+                isHeating = true;
+                startTime = Date.now() - (elapsedTime * 1000);
+                document.getElementById('heat-status-badge').innerText = "สถานะ: กำลังเผาความร้อน 🔥";
+                document.getElementById('heat-status-badge').className = "bg-red-500/20 text-red-400 border border-red-500/50 text-xs px-3 py-1 rounded-full font-bold animate-pulse";
+                
+                // Award Coins for starting test
+                addCoins(10);
+            }
+        }
+
+        function resetConductionTest() {
+            isHeating = false;
+            elapsedTime = 0;
+            document.getElementById('timer-display').innerText = "0.0";
+            document.getElementById('heat-status-badge').innerText = "สถานะ: รอดำเนินการ";
+            document.getElementById('heat-status-badge').className = "bg-slate-800 text-cyan-400 border border-cyan-500/30 text-xs px-3 py-1 rounded-full font-bold";
+            document.getElementById('temp-end-display').innerText = "25 °C";
+            initConductionCanvas();
+        }
+
+        function getTempColor(temp) {
+            const ratio = Math.min(1, Math.max(0, (temp - 25) / 350));
+            if (ratio < 0.5) {
+                const r = Math.floor(6 + (245 - 6) * (ratio * 2));
+                const g = Math.floor(182 + (158 - 182) * (ratio * 2));
+                const b = Math.floor(212 - (11 - 212) * (ratio * 2));
+                return `rgb(${r}, ${g}, ${b})`;
+            } else {
+                const r = Math.floor(245 + (239 - 245) * ((ratio - 0.5) * 2));
+                const g = Math.floor(158 - (158 - 68) * ((ratio - 0.5) * 2));
+                const b = Math.floor(11 + (68 - 11) * ((ratio - 0.5) * 2));
+                return `rgb(${r}, ${g}, ${b})`;
+            }
+        }
+
+        function drawConductionFrame() {
+            condCtx.clearRect(0, 0, condCanvas.width, condCanvas.height);
+
+            const matInfo = materials[currentMaterial];
+            const startX = condCanvas.width * 0.2;
+            const endX = condCanvas.width * 0.85;
+            const rodHeight = condCanvas.height * 0.35;
+            const startY = (condCanvas.height - rodHeight) / 2;
+
+            // Draw Flame
+            if (isHeating) {
+                elapsedTime = (Date.now() - startTime) / 1000;
+                document.getElementById('timer-display').innerText = elapsedTime.toFixed(1);
+
+                const flameX = startX - 25;
+                const flameY = startY + rodHeight / 2;
+                condCtx.beginPath();
+                condCtx.fillStyle = '#ef4444';
+                condCtx.arc(flameX, flameY + Math.sin(Date.now() * 0.02) * 4, 25 + Math.random() * 5, 0, Math.PI * 2);
+                condCtx.fill();
+
+                condCtx.beginPath();
+                condCtx.fillStyle = '#fbbf24';
+                condCtx.arc(flameX + 5, flameY + Math.sin(Date.now() * 0.03) * 2, 14 + Math.random() * 3, 0, Math.PI * 2);
+                condCtx.fill();
+            }
+
+            if (isHeating) {
+                particles.forEach(p => {
+                    if (p.col === 0) {
+                        p.temp += (heatSourceTemp - p.temp) * 0.05 * matInfo.factor;
+                    } else {
+                        const leftNeighbors = particles.filter(other => other.col === p.col - 1);
+                        const avgLeftTemp = leftNeighbors.reduce((acc, curr) => acc + curr.temp, 0) / leftNeighbors.length;
+                        p.temp += (avgLeftTemp - p.temp) * 0.04 * matInfo.factor;
+                    }
+
+                    const vibeAmp = (p.temp - 25) * 0.025;
+                    p.vibeX = (Math.random() - 0.5) * vibeAmp;
+                    p.vibeY = (Math.random() - 0.5) * vibeAmp;
+                });
+
+                const rightmost = particles.filter(p => p.col === numCols - 1);
+                const avgRightTemp = rightmost.reduce((acc, curr) => acc + curr.temp, 0) / rightmost.length;
+                document.getElementById('temp-end-display').innerText = `${Math.round(avgRightTemp)} °C`;
+            }
+
+            // Rod Container
+            condCtx.fillStyle = '#0f172a';
+            condCtx.strokeStyle = '#334155';
+            condCtx.lineWidth = 4;
+            condCtx.beginPath();
+            condCtx.roundRect(startX - 10, startY - 10, (endX - startX) + 20, rodHeight + 20, 16);
+            condCtx.fill();
+            condCtx.stroke();
+
+            // Roblox Blocky Particles
+            particles.forEach(p => {
+                const drawX = p.baseX + p.vibeX;
+                const drawY = p.baseY + p.vibeY;
+                const color = getTempColor(p.temp);
+
+                // Roblox Stud / Square style
+                condCtx.fillStyle = color;
+                condCtx.strokeStyle = '#ffffff';
+                condCtx.lineWidth = 1.5;
+                condCtx.beginPath();
+                condCtx.roundRect(drawX - 7, drawY - 7, 14, 14, 3);
+                condCtx.fill();
+                condCtx.stroke();
+            });
+
+            requestAnimationFrame(drawConductionFrame);
+        }
+
+        /* -------------------------------------------------------------
+           2. THERMAL EXPANSION SIMULATION
+        ------------------------------------------------------------- */
+        const expCanvas = document.getElementById('expansionCanvas');
+        const expCtx = expCanvas.getContext('2d');
+
+        let expMode = 'ball';
+        let expTemperature = 25;
+
+        function initExpansionCanvas() {
+            const rect = expCanvas.parentElement.getBoundingClientRect();
+            expCanvas.width = rect.width;
+            expCanvas.height = rect.height;
+        }
+
+        function setExpMode(mode) {
+            expMode = mode;
+            document.querySelectorAll('.exp-btn').forEach(btn => {
+                btn.classList.remove('active', 'border-2', 'border-cyan-500', 'text-cyan-400');
+                btn.classList.add('border-slate-700', 'text-slate-300');
+            });
+            document.getElementById(`exp-mode-${mode}`).classList.add('active', 'border-2', 'border-cyan-500', 'text-cyan-400');
+            updateExpTemp(expTemperature);
+        }
+
+        function updateExpTemp(val) {
+            expTemperature = parseInt(val);
+            document.getElementById('exp-temp-val').innerText = `${val} °C`;
+            document.getElementById('exp-state-display').innerText = `อุณหภูมิปัจจุบัน: ${val} °C`;
+
+            const textEl = document.getElementById('exp-result-text');
+            if (expMode === 'ball') {
+                if (expTemperature > 80) {
+                    textEl.innerHTML = "<span class='text-red-400 font-bold'>🔥 ลูกกลมขยายตัวใหญ่ขึ้น!</span> ไม่สามารถลอดผ่านห่วงได้";
+                } else if (expTemperature < 0) {
+                    textEl.innerHTML = "<span class='text-cyan-400 font-bold'>❄️ ลูกกลมหดตัวเล็กลง!</span> ลอดผ่านห่วงได้อย่างหลวมๆ";
+                } else {
+                    textEl.innerHTML = "ลูกกลมขนาดปกติ ลอดผ่านห่วงพอดี";
+                }
+            } else if (expMode === 'wire') {
+                textEl.innerHTML = `เส้นลวดขยายยาวขึ้น / หย่อนลงตามระดับความร้อน (ความยาวเพิ่มขึ้น ${(expTemperature * 0.08).toFixed(1)}%)`;
+            } else if (expMode === 'liquid') {
+                textEl.innerHTML = `ของเหลวขยายตัวดันระดับสูงขึ้นในหลอดแก้ว`;
+            }
+        }
+
+        function drawExpansionFrame() {
+            expCtx.clearRect(0, 0, expCanvas.width, expCanvas.height);
+
+            const centerX = expCanvas.width / 2;
+            const centerY = expCanvas.height / 2;
+
+            if (expMode === 'ball') {
+                const ringRadius = 55;
+                const baseBallRadius = 53;
+                const expansionFactor = (expTemperature - 25) * 0.12;
+                const currentBallRadius = baseBallRadius + expansionFactor;
+
+                // Ring Stand
+                expCtx.strokeStyle = '#475569';
+                expCtx.lineWidth = 10;
+                expCtx.beginPath();
+                expCtx.arc(centerX + 60, centerY, ringRadius, 0, Math.PI * 2);
+                expCtx.stroke();
+
+                // Ball
+                const ballX = centerX - 40;
+                const ballColor = getTempColor(expTemperature * 3);
+                
+                expCtx.beginPath();
+                expCtx.fillStyle = ballColor;
+                expCtx.arc(ballX, centerY, Math.max(10, currentBallRadius), 0, Math.PI * 2);
+                expCtx.fill();
+                expCtx.strokeStyle = '#ffffff';
+                expCtx.lineWidth = 2;
+                expCtx.stroke();
+
+                // Inner Atoms
+                const particleCount = 10;
+                const vibe = Math.max(0.5, (expTemperature + 20) * 0.05);
+                for (let i = 0; i < particleCount; i++) {
+                    const angle = (i / particleCount) * Math.PI * 2;
+                    const r = currentBallRadius * 0.5;
+                    const px = ballX + Math.cos(angle) * r + (Math.random() - 0.5) * vibe;
+                    const py = centerY + Math.sin(angle) * r + (Math.random() - 0.5) * vibe;
+
+                    expCtx.beginPath();
+                    expCtx.fillStyle = '#ffffff';
+                    expCtx.arc(px, py, 3, 0, Math.PI * 2);
+                    expCtx.fill();
+                }
+
+            } else if (expMode === 'wire') {
+                const sag = Math.max(0, (expTemperature - 10) * 0.4);
+                
+                expCtx.fillStyle = '#334155';
+                expCtx.fillRect(80, centerY - 60, 15, 120);
+                expCtx.fillRect(expCanvas.width - 95, centerY - 60, 15, 120);
+
+                expCtx.beginPath();
+                expCtx.strokeStyle = getTempColor(expTemperature * 3);
+                expCtx.lineWidth = 6;
+                expCtx.moveTo(95, centerY - 40);
+                expCtx.quadraticCurveTo(centerX, centerY - 40 + sag, expCanvas.width - 95, centerY - 40);
+                expCtx.stroke();
+
+            } else if (expMode === 'liquid') {
+                const tubeW = 40;
+                const tubeH = 160;
+                const tubeX = centerX - tubeW / 2;
+                const tubeY = centerY - tubeH / 2;
+
+                expCtx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+                expCtx.strokeStyle = '#475569';
+                expCtx.lineWidth = 3;
+                expCtx.beginPath();
+                expCtx.roundRect(tubeX, tubeY, tubeW, tubeH, 20);
+                expCtx.fill();
+                expCtx.stroke();
+
+                const fillPercent = Math.min(0.95, Math.max(0.1, (expTemperature + 20) / 140));
+                const liquidH = tubeH * fillPercent;
+                const liquidY = tubeY + tubeH - liquidH;
+
+                expCtx.fillStyle = '#ef4444';
+                expCtx.beginPath();
+                expCtx.roundRect(tubeX + 4, liquidY, tubeW - 8, liquidH - 4, [0, 0, 15, 15]);
+                expCtx.fill();
+            }
+
+            requestAnimationFrame(drawExpansionFrame);
+        }
+
+        /* -------------------------------------------------------------
+           3. QUIZ & REWARD SYSTEM
+        ------------------------------------------------------------- */
+        const quizAnswers = {
+            q1: { correct: 'A', explain: 'ถูกต้อง! ผิวแก้วด้านในขยายตัวเร็วมากขณะที่ด้านนอกยังไม่ขยาย เกิดแรงดันขัดกันจนแตกร้าว' },
+            q2: { correct: 'B', explain: 'ถูกต้อง! การนำความร้อนเป็นการสั่นสะเทือนชนกันของอนุภาคของแข็ง โดยตัวมันเองไม่ได้เคลื่อนที่ไป' },
+            q3: { correct: 'B', explain: 'ถูกต้อง! เว้นช่องว่างไว้เพื่อให้รางเหล็กขยายตัวได้ในวันอากาศร้อน โดยไม่ดันกันจนโก่งงอ' }
+        };
+
+        function addCoins(amount) {
+            coins += amount;
+            document.getElementById('robux-coins').innerText = coins;
+        }
+
+        function submitQuiz(e) {
+            e.preventDefault();
+            let score = 0;
+
+            for (let q in quizAnswers) {
+                const selected = document.querySelector(`input[name="${q}"]:checked`);
+                const feedbackEl = document.getElementById(`feedback-${q}`);
+                feedbackEl.classList.remove('hidden', 'bg-emerald-500/20', 'text-emerald-300', 'bg-red-500/20', 'text-red-300', 'border-emerald-500/40', 'border-red-500/40');
+
+                if (selected && selected.value === quizAnswers[q].correct) {
+                    score++;
+                    feedbackEl.classList.add('bg-emerald-500/20', 'text-emerald-300', 'border', 'border-emerald-500/40');
+                    feedbackEl.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400 mr-1"></i> <b>เก่งมาก!</b> ${quizAnswers[q].explain}`;
+                } else {
+                    feedbackEl.classList.add('bg-red-500/20', 'text-red-300', 'border', 'border-red-500/40');
+                    feedbackEl.innerHTML = `<i class="fa-solid fa-circle-xmark text-red-400 mr-1"></i> <b>ยังไม่ถูกต้อง</b> เฉลยข้อ <b>${quizAnswers[q].correct}</b> - ${quizAnswers[q].explain}`;
+                }
+            }
+
+            trophies = score;
+            document.getElementById('trophy-count').innerText = trophies;
+            addCoins(score * 50);
+
+            const scoreBadge = document.getElementById('quiz-score-badge');
+            document.getElementById('score-val').innerText = score;
+            scoreBadge.classList.remove('hidden');
+
+            // Trigger Roblox Confetti Explosion if score > 0
+            if (score > 0 && typeof confetti === 'function') {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            }
+        }
+
+        function resetQuiz() {
+            document.getElementById('quizForm').reset();
+            for (let q in quizAnswers) {
+                document.getElementById(`feedback-${q}`).classList.add('hidden');
+            }
+            document.getElementById('quiz-score-badge').classList.add('hidden');
+        }
+
+        // Init App
+        window.onload = function() {
+            initAvatarSelector();
+        };
+
+        window.onresize = function() {
+            initConductionCanvas();
+            initExpansionCanvas();
+        };
+    </script>
+</body>
+</html>
